@@ -1,22 +1,46 @@
-import { useCounterStore } from './store';
+import { useTodosStore } from './store';
 
 function App() {
-  const counter = useCounterStore((state) => state.counter);
-  const increase = useCounterStore((state) => state.increase);
-  const decrease = useCounterStore((state) => state.decrease);
-  const increaseBy20 = useCounterStore((state) => state.increaseBy20);
-  const clear = useCounterStore((state) => state.clear);
+  const todos = useTodosStore((state) => state.todos);
+  const [text, updateText] = useTodosStore((state) => [
+    state.text,
+    state.updateText,
+  ]);
+  const addTodo = useTodosStore((state) => state.addTodo);
+  const deleteTodo = useTodosStore((state) => state.deleteTodo);
+  const toggleTodo = useTodosStore((state) => state.toggleTodo);
+  const editTodo = useTodosStore((state) => state.editTodo);
+  const saveEdit = useTodosStore((state) => state.saveEdit);
+  const handleText = (e) => {
+    updateText(e.target.value);
+  };
+
   return (
     <div className="container">
-      <h1>Counter</h1>
+      <h1>Todos</h1>
       <div>
-        <h2>{counter}</h2>
-        <div className="buttons">
-          <button onClick={increase}>Increase</button>
-          <button onClick={decrease}>Decrease</button>
-          <button onClick={increaseBy20}>Increase by 20</button>
-          <button onClick={clear}>Clear</button>
-        </div>
+        <input type="text" value={text} onChange={handleText} />
+        <button onClick={() => addTodo(text)}>Add todo</button>
+      </div>
+
+      <div>
+        {todos.map((todo) => (
+          <div key={todo.id}>
+            <span className={todo.completed ? 'completed' : ''}>
+              {todo.text}
+            </span>
+            <button onClick={() => editTodo(todo.id)}>Edit</button>
+            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
+            <button onClick={() => toggleTodo(todo.id)}>Done</button>
+            {todo.edited === true && (
+              <div className="modal">
+                <input type="text" value={text} onChange={handleText} />
+                <button onClick={() => saveEdit(text, todo.id)}>Save</button>
+                <button onClick={() => editTodo(todo.id)}>Close</button>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
