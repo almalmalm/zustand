@@ -18,10 +18,15 @@ function App() {
 
   return (
     <div className="container">
-      <h1>Todos</h1>
       <div>
         <input type="text" value={text} onChange={handleText} />
-        <button onClick={() => addTodo(text)}>Add todo</button>
+        <button
+          onClick={() =>
+            text.trim() !== '' ? addTodo(text) : console.log('add text')
+          }
+        >
+          Add todo
+        </button>
       </div>
 
       <div>
@@ -36,7 +41,15 @@ function App() {
             {todo.edited === true && (
               <div className="modal">
                 <input type="text" value={text} onChange={handleText} />
-                <button onClick={() => saveEdit(text, todo.id)}>Save</button>
+                <button
+                  onClick={() =>
+                    text.trim() !== ''
+                      ? saveEdit(text, todo.id)
+                      : console.log('add text')
+                  }
+                >
+                  Save
+                </button>
                 <button onClick={() => closeTodoEdit(todo.id)}>Close</button>
               </div>
             )}
