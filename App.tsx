@@ -11,7 +11,8 @@ function App() {
   const toggleTodo = useTodosStore((state) => state.toggleTodo);
   const editTodo = useTodosStore((state) => state.editTodo);
   const saveEdit = useTodosStore((state) => state.saveEdit);
-  const handleText = (e) => {
+  const closeTodoEdit = useTodosStore((state) => state.closeTodoEdit);
+  const handleText = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateText(e.target.value);
   };
 
@@ -36,7 +37,7 @@ function App() {
               <div className="modal">
                 <input type="text" value={text} onChange={handleText} />
                 <button onClick={() => saveEdit(text, todo.id)}>Save</button>
-                <button onClick={() => editTodo(todo.id)}>Close</button>
+                <button onClick={() => closeTodoEdit(todo.id)}>Close</button>
               </div>
             )}
           </div>

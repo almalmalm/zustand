@@ -1,10 +1,26 @@
 import { create } from 'zustand';
 
-export const useTodosStore = create((set, get) => ({
-  todos: [
-    { id: 1, text: 'Bye me', completed: false, edit: false },
-    { id: 2, text: 'Bye you', completed: false, edit: false },
-  ],
+interface Todo {
+  id: number | string;
+  text: string;
+  completed: boolean;
+  edited: boolean;
+}
+
+interface TodosState {
+  todos: Todo[];
+  text: string;
+  updateText: (value: string) => void;
+  addTodo: (text: string) => void;
+  deleteTodo: (id: number | string) => void;
+  toggleTodo: (id: number | string) => void;
+  editTodo: (id: number | string) => void;
+  saveEdit: (text: string, id: number | string) => void;
+  closeTodoEdit: (id: number | string) => void;
+}
+
+export const useTodosStore = create<TodosState>((set, get) => ({
+  todos: [],
   text: '',
   updateText: (value) => set({ text: value }),
 
@@ -29,13 +45,20 @@ export const useTodosStore = create((set, get) => ({
       ),
     });
   },
-
   editTodo: (id) => {
     set({
       todos: get().todos.map((todo) =>
         todo.id === id ? { ...todo, edited: !todo.edited } : todo
       ),
       text: get().todos.filter((todo) => todo.id === id)[0].text,
+    });
+  },
+  closeTodoEdit: (id) => {
+    set({
+      todos: get().todos.map((todo) =>
+        todo.id === id ? { ...todo, edited: !todo.edited } : todo
+      ),
+      text: '',
     });
   },
   saveEdit: (text, id) => {
